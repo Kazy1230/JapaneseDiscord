@@ -22,36 +22,37 @@ Base.metadata.create_all(bind=engine)
 async def on_ready():
     print(f"Logged in as {bot.user}")
 
-@bot.command()
-async def log(ctx, category: str, *, content: str):
-    """
-    使い方:
-    !log grammar I have went to school
-    """
-    session = SessionLocal()
+@bot.event
+async def on_message(message):
+    if message.author.bot:
+        return
 
-    discord_id = str(ctx.author.id)
+    value = extract_number(message.content)
+    if value is None:
+        return
+
+    session = SessionLocal()
+    discord_id = str(message.author.id)
 
     user = session.query(User).filter_by(discord_id=discord_id).first()
     if not user:
-        user = User(
-            discord_id=discord_id,
-            username=str(ctx.author)
-        )
+        user = User(discord_id=discord_id, username=str(message.author))
         session.add(user)
         session.commit()
 
-    log = StudyLog(
-        user_id=user.id,
-        category=category,
-        content=content,
-        is_correct=False  # ←後でAIや手動で更新
-    )
+    stat = session.query(UserStat).filter_by(user_id=user.id).first()
+    if not stat:
+        stat = UserStat(user_id=user.id, total_value=0)
+        session.add(stat)
 
-    session.add(log)
+    stat.total_value += value
     session.commit()
     session.close()
 
-    await ctx.send("✅ 学習ログを記録したよ！")
+    # 🔽 ここがポイント
+    await message.add_reaction("✅")
+
+    await bot.process_commands(message)
+
 
 bot.run(TOKEN)
