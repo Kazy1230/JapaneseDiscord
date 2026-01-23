@@ -1,22 +1,15 @@
-from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey
+from sqlalchemy import Column, Integer, String, DateTime
 from datetime import datetime
 from database import Base
 
-class User(Base):
-    __tablename__ = "users"
+
+class UserStat(Base):
+    __tablename__ = "user_stats"
 
     id = Column(Integer, primary_key=True)
-    discord_id = Column(String, unique=True)
-    username = Column(String)
-    created_at = Column(DateTime, default=datetime.utcnow)
+    discord_id = Column(String, unique=True, nullable=False)
 
+    # 累積学習時間（分）
+    total_minutes = Column(Integer, default=0)
 
-class StudyLog(Base):
-    __tablename__ = "study_logs"
-
-    id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey("users.id"))
-    category = Column(String)  # grammar / vocab / reading
-    content = Column(String)
-    is_correct = Column(Boolean)
     created_at = Column(DateTime, default=datetime.utcnow)
