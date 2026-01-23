@@ -4,6 +4,9 @@ from discord.ext import commands
 
 from database import SessionLocal
 from models import UserStat
+from database import engine
+from models import Base
+
 
 
 # -------- Discord Bot 設定 --------
@@ -28,6 +31,7 @@ def extract_number(text: str) -> int | None:
 # -------- Bot 起動確認 --------
 @bot.event
 async def on_ready():
+    Base.metadata.create_all(bind=engine)
     print(f"Logged in as {bot.user}")
 
 
