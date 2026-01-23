@@ -1,4 +1,5 @@
 import os
+import re
 import discord
 from discord.ext import commands
 from dotenv import load_dotenv
@@ -12,6 +13,12 @@ TOKEN = os.getenv("DISCORD_TOKEN")
 
 intents = discord.Intents.default()
 intents.message_content = True
+
+def extract_number(text: str):
+    match = re.search(r'\d+', text)
+    if match:
+        return int(match.group())
+    return None
 
 bot = commands.Bot(command_prefix="!", intents=intents)
 
