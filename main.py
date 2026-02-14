@@ -70,6 +70,26 @@ async def on_message(message: discord.Message):
     # ✅ メッセージは返さず、リアクションだけ
     await message.add_reaction("✅")
 
+@bot.command()
+async def ranking(ctx):
+    db = SessionLocal()
+    try:
+        users = (
+            db.query(UserStat)
+            .order_by(desc(UserStat.total_minutes))
+            .limit(10)
+            .all()
+        )
+        if not users:
+            await ctx.send("まだ学習記録がありません。")
+            return
+
+        message ="🏆 学習時間ランキング 🏆\n\n"
+
+        for i, user in enumerate(users, start=1):
+            message += f"{i}. {user.username} - {user.total_minutes} 分\n"
+
+        await ctx.send(message)
 
 # -------- Bot 起動 --------
 import os
