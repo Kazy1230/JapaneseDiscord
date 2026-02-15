@@ -73,7 +73,7 @@ async def on_message(message: discord.Message):
 
 @bot.command()
 async def ranking(ctx):
-    await ctx.send("test")
+    await print("test")
     db = SessionLocal()
     try:
         users = (
