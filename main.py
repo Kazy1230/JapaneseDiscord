@@ -90,6 +90,8 @@ async def ranking(ctx):
             message += f"{i}. {user.username} - {user.total_minutes} 分\n"
 
         await ctx.send(message)
+    finally:
+        db.close()
 
 # -------- Bot 起動 --------
 import os
