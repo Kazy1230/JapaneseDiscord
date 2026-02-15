@@ -6,6 +6,7 @@ from database import SessionLocal
 from models import UserStat
 from database import engine
 from models import Base
+from sqlalchemy import desc
 
 
 
