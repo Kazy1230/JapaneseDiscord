@@ -70,10 +70,12 @@ async def on_message(message: discord.Message):
 
     # ✅ メッセージは返さず、リアクションだけ
     await message.add_reaction("✅")
+    bot.process_commands()
+
 
 @bot.command()
 async def ranking(ctx):
-    await print("test")
+    print("test")
     db = SessionLocal()
     try:
         users = (
